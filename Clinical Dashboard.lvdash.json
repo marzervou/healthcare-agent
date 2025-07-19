@@ -44,6 +44,13 @@
         "    END AS family_history_CAD\n",
         "FROM mzervou.healthcare.synthetic_audio_transcripts_enriched;\n"
       ]
+    },
+    {
+      "name": "07f6305b",
+      "displayName": "synthetic_audio_transcripts_semantic_similarity",
+      "queryLines": [
+        "SELECT * FROM mzervou.healthcare.synthetic_audio_transcripts_semantic_similarity"
+      ]
     }
   ],
   "pages": [
@@ -579,6 +586,23 @@
                   ],
                   "disaggregated": false
                 }
+              },
+              {
+                "name": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064ae3769155287662966b60968c1_department",
+                "query": {
+                  "datasetName": "07f6305b",
+                  "fields": [
+                    {
+                      "name": "department",
+                      "expression": "`department`"
+                    },
+                    {
+                      "name": "department_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
               }
             ],
             "spec": {
@@ -595,6 +619,11 @@
                     "fieldName": "department",
                     "displayName": "department",
                     "queryName": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064a6a95113858bd24ac9efbec2fa_department"
+                  },
+                  {
+                    "fieldName": "department",
+                    "displayName": "department",
+                    "queryName": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064ae3769155287662966b60968c1_department"
                   }
                 ]
               },
@@ -606,6 +635,96 @@
           "position": {
             "x": 0,
             "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "8c0526a8",
+            "queries": [
+              {
+                "name": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064a6a95113858bd24ac9efbec2fa_doctor_name",
+                "query": {
+                  "datasetName": "cccdff10",
+                  "fields": [
+                    {
+                      "name": "doctor_name",
+                      "expression": "`doctor_name`"
+                    },
+                    {
+                      "name": "doctor_name_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064a4fec11c468326a712715680cc_doctor_name",
+                "query": {
+                  "datasetName": "0d415f3c",
+                  "fields": [
+                    {
+                      "name": "doctor_name",
+                      "expression": "`doctor_name`"
+                    },
+                    {
+                      "name": "doctor_name_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064ae3769155287662966b60968c1_doctor_name",
+                "query": {
+                  "datasetName": "07f6305b",
+                  "fields": [
+                    {
+                      "name": "doctor_name",
+                      "expression": "`doctor_name`"
+                    },
+                    {
+                      "name": "doctor_name_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "doctor_name",
+                    "displayName": "doctor_name",
+                    "queryName": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064a6a95113858bd24ac9efbec2fa_doctor_name"
+                  },
+                  {
+                    "fieldName": "doctor_name",
+                    "displayName": "doctor_name",
+                    "queryName": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064a4fec11c468326a712715680cc_doctor_name"
+                  },
+                  {
+                    "fieldName": "doctor_name",
+                    "displayName": "doctor_name",
+                    "queryName": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064ae3769155287662966b60968c1_doctor_name"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
             "width": 1,
             "height": 2
           }
