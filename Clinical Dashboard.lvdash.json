@@ -1,0 +1,622 @@
+{
+  "datasets": [
+    {
+      "name": "0d415f3c",
+      "displayName": "synthetic_audio_transcripts_enriched",
+      "queryLines": [
+        "SELECT * FROM mzervou.healthcare.synthetic_audio_transcripts_enriched"
+      ]
+    },
+    {
+      "name": "cccdff10",
+      "displayName": "lifestyle choices",
+      "queryLines": [
+        "SELECT\n",
+        "    *,\n",
+        "    CASE \n",
+        "        WHEN LOWER(get_json_object(risk_factors_structured_output, '$.smoking_status')) IN ('unknown', 'not mentioned', 'none', '') THEN 'None'\n",
+        "        ELSE get_json_object(risk_factors_structured_output, '$.smoking_status')\n",
+        "    END AS smoking_status,\n",
+        "\n",
+        "    CASE \n",
+        "        WHEN LOWER(get_json_object(risk_factors_structured_output, '$.alcohol_use')) IN ('unknown', 'not mentioned', 'none', '') THEN 'None'\n",
+        "        ELSE get_json_object(risk_factors_structured_output, '$.alcohol_use')\n",
+        "    END AS alcohol_use,\n",
+        "\n",
+        "    CASE \n",
+        "        WHEN LOWER(get_json_object(risk_factors_structured_output, '$.diet_quality')) IN ('unknown', 'not mentioned', 'none', '') THEN 'None'\n",
+        "        ELSE get_json_object(risk_factors_structured_output, '$.diet_quality')\n",
+        "    END AS diet_quality,\n",
+        "\n",
+        "    CASE \n",
+        "        WHEN LOWER(get_json_object(risk_factors_structured_output, '$.exercise_level')) IN ('unknown', 'not mentioned', 'none', '') THEN 'None'\n",
+        "        ELSE get_json_object(risk_factors_structured_output, '$.exercise_level')\n",
+        "    END AS exercise_level,\n",
+        "\n",
+        "    CASE \n",
+        "        WHEN LOWER(get_json_object(risk_factors_structured_output, '$.medication_adherence')) IN ('unknown', 'not mentioned', 'none', '') THEN 'None'\n",
+        "        ELSE get_json_object(risk_factors_structured_output, '$.medication_adherence')\n",
+        "    END AS medication_adherence,\n",
+        "\n",
+        "    CASE \n",
+        "        WHEN LOWER(get_json_object(risk_factors_structured_output, '$.family_history_CAD')) IN ('unknown', 'not mentioned', 'none', '') THEN 'None'\n",
+        "        ELSE get_json_object(risk_factors_structured_output, '$.family_history_CAD')\n",
+        "    END AS family_history_CAD\n",
+        "FROM mzervou.healthcare.synthetic_audio_transcripts_enriched;\n"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "d6c994e2",
+      "displayName": "Clinical Summary",
+      "layout": [
+        {
+          "widget": {
+            "name": "2da19b5a",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Clinical Summary Dashboard\n",
+                "\n",
+                "## Overview of all patient cases for clinical leadership."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "0e4cbe5c",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "0d415f3c",
+                  "fields": [
+                    {
+                      "name": "count(patient_id)",
+                      "expression": "COUNT(`patient_id`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "count(patient_id)",
+                  "displayName": "Count of patient_id"
+                }
+              },
+              "frame": {
+                "title": "Total patients seen",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 2,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "1d243285",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "0d415f3c",
+                  "fields": [
+                    {
+                      "name": "count(visit_sentiment)",
+                      "expression": "COUNT(`visit_sentiment`)"
+                    },
+                    {
+                      "name": "visit_sentiment",
+                      "expression": "`visit_sentiment`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "count(visit_sentiment)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Count of visit_sentiment"
+                },
+                "color": {
+                  "fieldName": "visit_sentiment",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "visit_sentiment"
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "title": "Routine / Urgent / Emergency visits (from sentiment classification)",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 2,
+            "width": 4,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "4e38211c",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "0d415f3c",
+                  "fields": [
+                    {
+                      "name": "monthly(visit_datetime)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `visit_datetime`)"
+                    },
+                    {
+                      "name": "count(patient_id)",
+                      "expression": "COUNT(`patient_id`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "monthly(visit_datetime)",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "visit_datetime"
+                },
+                "y": {
+                  "fieldName": "count(patient_id)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Count of patient_id"
+                }
+              },
+              "frame": {
+                "title": "Patient Visits Over Time",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "ae2cc7d6",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "0d415f3c",
+                  "fields": [
+                    {
+                      "name": "visit_sentiment",
+                      "expression": "`visit_sentiment`"
+                    },
+                    {
+                      "name": "department",
+                      "expression": "`department`"
+                    },
+                    {
+                      "name": "count(visit_sentiment)",
+                      "expression": "COUNT(`visit_sentiment`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "department",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "department"
+                },
+                "y": {
+                  "fieldName": "count(visit_sentiment)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Count of visit_sentiment"
+                },
+                "color": {
+                  "fieldName": "visit_sentiment",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "visit_sentiment"
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "title": "Visit Sentiment by Department",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 6,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "1f7f0d78",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Lifestyle Risk Factors Dashboard\n",
+                "## Identify modifiable risks across population."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "d62f06ae",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "cccdff10",
+                  "fields": [
+                    {
+                      "name": "smoking_status",
+                      "expression": "`smoking_status`"
+                    },
+                    {
+                      "name": "count(patient_id)",
+                      "expression": "COUNT(`patient_id`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "smoking_status",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "smoking_status"
+                },
+                "y": {
+                  "fieldName": "count(patient_id)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Count of patient_id"
+                }
+              },
+              "frame": {
+                "title": "Smoking Status Distribution",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 14,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "291b84c1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "cccdff10",
+                  "fields": [
+                    {
+                      "name": "count(alcohol_use)",
+                      "expression": "COUNT(`alcohol_use`)"
+                    },
+                    {
+                      "name": "alcohol_use",
+                      "expression": "`alcohol_use`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "count(alcohol_use)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Count of alcohol_use"
+                },
+                "color": {
+                  "fieldName": "alcohol_use",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "alcohol_use"
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "title": "Alcohol Use Distribution",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 14,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "43044838",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "cccdff10",
+                  "fields": [
+                    {
+                      "name": "exercise_level",
+                      "expression": "`exercise_level`"
+                    },
+                    {
+                      "name": "count(patient_id)",
+                      "expression": "COUNT(`patient_id`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "exercise_level",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "exercise_level"
+                },
+                "y": {
+                  "fieldName": "count(patient_id)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Count of patient_id"
+                }
+              },
+              "frame": {
+                "title": "Smoking Status Distribution",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 20,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "304e3b17",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "cccdff10",
+                  "fields": [
+                    {
+                      "name": "diet_quality",
+                      "expression": "`diet_quality`"
+                    },
+                    {
+                      "name": "monthly(visit_datetime)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `visit_datetime`)"
+                    },
+                    {
+                      "name": "count(patient_id)",
+                      "expression": "COUNT(`patient_id`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "monthly(visit_datetime)",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "visit_datetime"
+                },
+                "y": {
+                  "fieldName": "count(patient_id)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Count of patient_id"
+                },
+                "color": {
+                  "fieldName": "diet_quality",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "diet_quality"
+                }
+              },
+              "frame": {
+                "title": "Diet Quality Overview over visit_datetime per month",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 20,
+            "width": 3,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "name": "5ba6792d",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "673cfe53",
+            "queries": [
+              {
+                "name": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064a4fec11c468326a712715680cc_department",
+                "query": {
+                  "datasetName": "0d415f3c",
+                  "fields": [
+                    {
+                      "name": "department",
+                      "expression": "`department`"
+                    },
+                    {
+                      "name": "department_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064a6a95113858bd24ac9efbec2fa_department",
+                "query": {
+                  "datasetName": "cccdff10",
+                  "fields": [
+                    {
+                      "name": "department",
+                      "expression": "`department`"
+                    },
+                    {
+                      "name": "department_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "department",
+                    "displayName": "department",
+                    "queryName": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064a4fec11c468326a712715680cc_department"
+                  },
+                  {
+                    "fieldName": "department",
+                    "displayName": "department",
+                    "queryName": "dashboards/01f064a4f0cc191dbdddb73ac5f0e288/datasets/01f064a6a95113858bd24ac9efbec2fa_department"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    }
+  }
+}
